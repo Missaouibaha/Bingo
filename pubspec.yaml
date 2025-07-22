@@ -1,0 +1,56 @@
+name: bingo_firebase_example
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.7.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: ^3.15.1
+  firebase_auth: ^5.6.2
+  #A reactive caching and data-binding framework. Riverpod makes working with asynchronous code a breeze.
+  flutter_riverpod: ^2.3.6
+
+#A build system for Dart code generation and modular compilation.
+  build_runner: ^2.4.15
+
+# The following adds the Cupertino Icons font to your application.
+# Use with the CupertinoIcons class for iOS style icons.  
+  cupertino_icons: ^1.0.8
+# for adapting screen andfont size
+  flutter_screenutil: ^5.9.3
+  # An SVG rendering and widget library for Flutter, which allows painting and displaying Scalable Vector Graphics
+  flutter_svg: ^2.0.17
+
+# scroll text library 
+  marquee: ^2.3.0
+#Functional Programming in Dart. Purify your Dart code using efficient immutable data structures, monads, lenses and other FP tools.
+  dartz: ^0.10.1
+
+#Flutter plugin for selecting images from the Android and iOS image library, and taking new pictures with the camera.
+  image_picker: ^1.0.0
+  
+#A package provides an easy way to add shimmer effect in Flutter project
+  shimmer: ^3.0.0
+  #A declarative router for Flutter based on Navigation 2 supporting deep linking, data-driven routes and more
+  go_router: ^13.0.0
+
+
+  equatable: ^2.0.5
+  collection: ^1.17.2
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+
+ 
+
+  assets:
+    - assets/images/
+    - assets/svgs/
