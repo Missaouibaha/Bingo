@@ -1,3 +1,5 @@
+import 'package:bingo_firebase_example/core/helper/exteensions.dart';
+import 'package:bingo_firebase_example/core/helper/routing/routes.dart';
 import 'package:bingo_firebase_example/core/helper/spacing.dart';
 import 'package:bingo_firebase_example/core/theming/app_assets.dart';
 import 'package:bingo_firebase_example/core/theming/app_dimensions.dart';
@@ -76,6 +78,27 @@ class _LoginScreenState extends State<LoginScreen> {
                   );
                 },
               ),
+              verticalSpace(AppDimensions.height_30),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    AppStrings.hvntAccnt,
+                    style: TextStyles.font15LightWhiteRegular,
+                  ),
+                  horizontalSpace(AppDimensions.width_5),
+                  GestureDetector(
+                    onTap: () {
+                      context.pushNamed(Routes.registerRoute);
+                    },
+                    child: Text(
+                      AppStrings.register,
+                      style: TextStyles.font15WhiteRegularUnderlined,
+                    ),
+                  ),
+                ],
+              ),
+
               LoginStateListener(),
             ],
           ),
