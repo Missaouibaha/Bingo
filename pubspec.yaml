@@ -11,6 +11,8 @@ dependencies:
     sdk: flutter
   firebase_core: ^3.15.1
   firebase_auth: ^5.6.2
+  cloud_firestore: ^5.6.12
+
   #A reactive caching and data-binding framework. Riverpod makes working with asynchronous code a breeze.
   flutter_riverpod: ^2.3.6
 

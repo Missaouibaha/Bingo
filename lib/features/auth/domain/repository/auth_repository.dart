@@ -4,4 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 abstract class AuthRepository {
   Future<Either<AuthFailure, User?>> signIn(String email, String password);
+  Future<Either<AuthFailure, User?>> register(
+    String email,
+    String password,
+    String name,
+  );
 }

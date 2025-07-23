@@ -10,7 +10,19 @@ class AuthRemoteImpl implements AuthRemote {
   AuthRemoteImpl(this._authService);
 
   @override
-  Future<Either<AuthFailure, User?>> signIn(String email, String password) {
-    return _authService.signIn(email, password);
+  Future<Either<AuthFailure, User?>> signIn(
+    String email,
+    String password,
+  ) async {
+    return await _authService.signIn(email, password);
+  }
+
+  @override
+  Future<Either<AuthFailure, User?>> register(
+    String email,
+    String password,
+    String name,
+  ) async {
+    return await _authService.register(email, password, name);
   }
 }

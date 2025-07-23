@@ -9,21 +9,38 @@ class TextStyles {
     fontWeight: FontWeightHelper.bold,
     color: ColorsManager.white,
   );
+  static TextStyle font24WhiteMedium = TextStyle(
+    fontSize: 24.sp,
+    fontWeight: FontWeightHelper.medium,
+    color: ColorsManager.white,
+  );
 
-    static TextStyle font18BlackSemiBold = TextStyle(
+  static TextStyle font18BlackSemiBold = TextStyle(
     fontSize: 18.sp,
     fontWeight: FontWeightHelper.semiBold,
     color: ColorsManager.black,
   );
 
-    static TextStyle font14DarckBlueMedium = TextStyle(
+  static TextStyle font14DarckBlueMedium = TextStyle(
     fontSize: 14.sp,
     fontWeight: FontWeightHelper.medium,
     color: ColorsManager.darckBlue,
   );
-    static TextStyle font14LightGrayRegular = TextStyle(
+  static TextStyle font14LightGrayRegular = TextStyle(
     fontSize: 14.sp,
     fontWeight: FontWeightHelper.regular,
     color: ColorsManager.lightGray,
+  );
+
+  static TextStyle font15LightWhiteRegular = TextStyle(
+    fontSize: 15.sp,
+    fontWeight: FontWeightHelper.regular,
+    color: ColorsManager.white,
+  );
+  static TextStyle font15WhiteRegularUnderlined = TextStyle(
+    fontSize: 15.sp,
+    fontWeight: FontWeightHelper.regular,
+    decoration: TextDecoration.underline,
+    color: ColorsManager.white,
   );
 }

@@ -11,4 +11,13 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<AuthFailure, User?>> signIn(String email, String password) {
     return _authRemote.signIn(email, password);
   }
+
+  @override
+  Future<Either<AuthFailure, User?>> register(
+    String email,
+    String password,
+    String name,
+  ) {
+    return _authRemote.register(email, password, name);
+  }
 }

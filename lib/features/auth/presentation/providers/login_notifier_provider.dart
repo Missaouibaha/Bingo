@@ -10,7 +10,7 @@ class LoginNotifier extends AsyncNotifier<User?> {
 
   @override
   FutureOr<User?> build() async {
-    _useCase = await ref.read(authUseCaseProvider.future);
+    _useCase = await ref.read(authSignInUseCaseProvider.future);
     return null;
   }
 
