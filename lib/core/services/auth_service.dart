@@ -9,6 +9,12 @@ class AuthService {
   static final AuthService instance = AuthService._privateConstructor();
   final _auth = FirebaseAuth.instance;
 
+  User? get currentUser => _auth.currentUser;
+
+  Stream<User?> get authStateChanges => _auth.authStateChanges();
+
+  bool isUserLoggedIn() => _auth.currentUser != null;
+
   Future<Either<AuthFailure, User?>> signIn(
     String email,
     String password,
@@ -66,8 +72,4 @@ class AuthService {
   Future<void> signOut() async {
     await _auth.signOut();
   }
-
-  User? get currentUser => _auth.currentUser;
-
-  Stream<User?> get authStateChanges => _auth.authStateChanges();
 }
