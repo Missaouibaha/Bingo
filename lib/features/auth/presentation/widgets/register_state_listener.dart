@@ -1,3 +1,5 @@
+import 'package:bingo_firebase_example/core/helper/exteensions.dart';
+import 'package:bingo_firebase_example/core/helper/routing/routes.dart';
 import 'package:bingo_firebase_example/core/utils/app_strings.dart';
 import 'package:bingo_firebase_example/core/widgets/app_custom_dialog.dart';
 import 'package:bingo_firebase_example/core/widgets/app_loading_indicator.dart';
@@ -21,7 +23,7 @@ class RegisterStateListener extends ConsumerWidget {
         data: (data) {
           if (data != null) {
             AppLoadingIndicator.hide(context);
-      
+            context.pushNamed(Routes.homeRoute);
           }
         },
         error: (error, stackTrace) {
