@@ -116,7 +116,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Future<void> validateFieldsThenRegister(WidgetRef ref) async {
     if (_formKey.currentState?.validate() ?? false) {
       ref
-          .read(registerNotifierProvider.notifier)
+          .watch(registerNotifierProvider.notifier)
           .register(
             _emailController.text,
             _nameController.text,

@@ -1,5 +1,6 @@
 import 'package:bingo_firebase_example/core/theming/colors_manager.dart';
 import 'package:bingo_firebase_example/core/theming/font_weight_helper.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -14,11 +15,20 @@ class TextStyles {
     fontWeight: FontWeightHelper.medium,
     color: ColorsManager.white,
   );
-
+  static TextStyle font23DarkBlueSemiBold = TextStyle(
+    fontSize: 23.sp,
+    fontWeight: FontWeightHelper.semiBold,
+    color: ColorsManager.darckBlue,
+  );
   static TextStyle font18BlackSemiBold = TextStyle(
     fontSize: 18.sp,
     fontWeight: FontWeightHelper.semiBold,
-    color: ColorsManager.black,
+    color: ColorsManager.black
+  );
+    static TextStyle font18GreySemiBold = TextStyle(
+    fontSize: 18.sp,
+    fontWeight: FontWeightHelper.semiBold,
+    color: ColorsManager.grey,
   );
 
   static TextStyle font14DarckBlueMedium = TextStyle(

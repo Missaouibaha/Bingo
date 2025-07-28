@@ -6,7 +6,7 @@ import 'package:bingo_firebase_example/features/auth/domain/repository/auth_repo
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final remoteAuthProvider = FutureProvider<AuthRemote>((ref) async {
-  final authService = ref.read(authServiceProvider);
+  final authService = ref.read(fireBaseServiceProvider);
   return AuthRemoteImpl(authService);
 });
 

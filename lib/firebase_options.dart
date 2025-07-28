@@ -46,7 +46,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '404200478715',
     projectId: 'bingo-f95a7',
     authDomain: 'bingo-f95a7.firebaseapp.com',
-    storageBucket: 'bingo-f95a7.firebasestorage.app',
+    storageBucket: "bingo-f95a7.appspot.com", 
     measurementId: 'G-C5G393WWGF',
   );
 

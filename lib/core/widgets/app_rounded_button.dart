@@ -1,5 +1,3 @@
-
-
 import 'package:bingo_firebase_example/core/theming/app_dimensions.dart';
 import 'package:bingo_firebase_example/core/theming/colors_manager.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +34,7 @@ class AppRoundedButton extends StatelessWidget {
         padding: WidgetStateProperty.all(
           EdgeInsets.symmetric(
             horizontal: horizontalPadding?.w ?? AppDimensions.width_12,
-            vertical: verticalPadding?.h ?? AppDimensions.height_14,
+            vertical: verticalPadding?.h ?? AppDimensions.height_10,
           ),
         ),
         fixedSize: WidgetStateProperty.all(
