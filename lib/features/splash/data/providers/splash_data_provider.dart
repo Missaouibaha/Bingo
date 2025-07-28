@@ -6,7 +6,7 @@ import 'package:bingo_firebase_example/features/splash/domain/repository/splash_
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final splashRemoteDataProvider = FutureProvider<SplashRemote>((ref) async {
-  final authoService = ref.read(authServiceProvider);
+  final authoService = ref.read(fireBaseServiceProvider);
   return SplashRemoteImpl(authoService);
 });
 
