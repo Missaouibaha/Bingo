@@ -33,6 +33,7 @@ class AppDimensions {
   static double width_50 = 50.w;
   static double width_70 = 70.w;
   static double width_100 = 100.w;
+  static double width_130 = 130.w;
   static double width_150 = 150.w;
   static double width_170 = 170.w;
   static double width_250 = 250.w;

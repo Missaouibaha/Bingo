@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:bingo_firebase_example/core/services/app_firebase_failure.dart';
+import 'package:bingo_firebase_example/features/home/data/dataSources/models/note_model.dart';
 import 'package:dartz/dartz.dart';
 
 abstract class NoteRemoteDataSources {
@@ -9,6 +10,9 @@ abstract class NoteRemoteDataSources {
     String noteTitle,
     String noteDescription,
     File? noteImageFile,
-     Uint8List? webImageBytes,
+    Uint8List? webImageBytes,
   );
+
+  Future<Either<AppFirebaseFailure, List<NoteModel>?>> getNotes();
+  Stream<Either<AppFirebaseFailure, List<NoteModel>>> watchNotes();
 }

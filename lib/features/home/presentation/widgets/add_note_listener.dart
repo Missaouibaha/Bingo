@@ -21,6 +21,7 @@ class AddNoteListener extends ConsumerWidget {
       next.when(
         loading: () async {
           AppLoadingIndicator.show(context);
+         
         },
         data: (data) {
           AppLoadingIndicator.hide(context);
@@ -33,6 +34,7 @@ class AddNoteListener extends ConsumerWidget {
           );
         },
         error: (error, stackTrace) {
+
           AppLoadingIndicator.hide(context);
           AppCustomDialog.show(
             context: context,

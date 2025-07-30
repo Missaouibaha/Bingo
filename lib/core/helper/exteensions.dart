@@ -1,6 +1,7 @@
 import 'package:bingo_firebase_example/core/utils/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 extension Regex on String {
   String? isValidateEmail() {
@@ -18,6 +19,7 @@ extension Regex on String {
 extension NullOrEmpty on String? {
   bool isNullOrEmpty() => this == null || this!.isEmpty;
 }
+
 extension NavigationGoRouter on BuildContext {
   /// Navigate to a named route (replaces current screen)
   void goNamed(
@@ -81,3 +83,11 @@ extension NavigationGoRouter on BuildContext {
   /// Pop current route
   void pop() => Navigator.of(this).pop();
 }
+
+extension DateFormatting on DateTime {
+  String format(String pattern) {
+    return DateFormat(pattern).format(this);
+  }
+}
+
+

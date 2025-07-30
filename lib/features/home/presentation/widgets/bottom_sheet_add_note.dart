@@ -12,6 +12,8 @@ import 'package:bingo_firebase_example/core/widgets/app_custom_dialog.dart';
 import 'package:bingo_firebase_example/core/widgets/app_rounded_button.dart';
 import 'package:bingo_firebase_example/features/home/presentation/providers/add_note_notifier_provider.dart';
 import 'package:bingo_firebase_example/features/home/presentation/widgets/add_note_listener.dart';
+import 'package:bingo_firebase_example/features/home/presentation/widgets/imagepicker/image_picker_sheet.dart';
+import 'package:bingo_firebase_example/features/home/presentation/widgets/imagepicker/image_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,17 +27,18 @@ class BottomSheetAddNote extends StatefulWidget {
 }
 
 class _BottomSheetAddNoteState extends State<BottomSheetAddNote> {
-  File? _imageFile;
   String? _webImagePath;
   bool imageAdded = false;
   Uint8List? _webImageBytes;
+  File? _pickedImageFile;
 
-  final TextEditingController noteTitle = TextEditingController();
-  final TextEditingController noteDescription = TextEditingController();
+  final TextEditingController noteTitleController = TextEditingController();
+  final TextEditingController noteDescriptionController =
+      TextEditingController();
   @override
   void dispose() {
-    noteTitle.dispose();
-    noteDescription.dispose();
+    noteTitleController.dispose();
+    noteDescriptionController.dispose();
     super.dispose();
   }
 
@@ -50,38 +53,13 @@ class _BottomSheetAddNoteState extends State<BottomSheetAddNote> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          TextField(
-            decoration: InputDecoration(
-              hintText: AppStrings.noteTitle,
-              hintStyle: TextStyles.font18GreySemiBold,
-            ),
-            enabled: true,
-            style: TextStyles.font18BlackSemiBold,
-            textAlign: TextAlign.center,
-            controller: noteTitle,
-            autofocus: true,
-            maxLength: AppConsts.noteTitleMaxLength,
-          ),
-          SizedBox(
-            height: AppDimensions.height_100,
-            child: TextField(
-              maxLines: null,
-              expands: true,
-
-              textAlign: TextAlign.start,
-              controller: noteDescription,
-
-              decoration: InputDecoration(
-                hintText: AppStrings.noteDescription,
-                border: OutlineInputBorder(),
-              ),
-            ),
-          ),
+          _buildTitleField(),
+          _buildDescriptionField(),
           verticalSpace(AppDimensions.height_15),
-          if (!imageAdded)
+           if (!imageAdded)
             GestureDetector(
+              onTap: _showImagePickerBottomSheet,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Icon(
                     Icons.image,
@@ -95,77 +73,13 @@ class _BottomSheetAddNoteState extends State<BottomSheetAddNote> {
                   ),
                 ],
               ),
-              onTap: () {
-                _imagePicker(context);
-              },
             ),
           if (imageAdded)
-            SizedBox(
-              width: AppDimensions.width_170,
-              height: AppDimensions.height_150,
-              child: Stack(
-                children: [
-                  Image(
-                    image:
-                        kIsWeb
-                            ? (_webImagePath != null
-                                ? NetworkImage(_webImagePath!)
-                                : AssetImage(AppAssets.bingoPanda)
-                                    as ImageProvider)
-                            : (_imageFile != null
-                                ? FileImage(_imageFile!)
-                                : AssetImage(AppAssets.bingoPanda)
-                                    as ImageProvider),
-                    fit: BoxFit.fill,
-                    width: double.infinity,
-                    height: double.infinity,
-                  ),
-                  Positioned(
-                    top: AppDimensions.verticalPadding_5,
-                    right: AppDimensions.padding_5,
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          imageAdded = false;
-                        });
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(AppDimensions.padding_4),
-                        decoration: BoxDecoration(
-                          color: ColorsManager.darkGrey,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.delete,
-                          size: AppDimensions.width_25,
-                          color: ColorsManager.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    top: AppDimensions.verticalPadding_5,
-                    right: AppDimensions.width_40,
-                    child: GestureDetector(
-                      onTap: () {
-                        _imagePicker(context);
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(AppDimensions.padding_4),
-                        decoration: BoxDecoration(
-                          color: ColorsManager.darkGrey,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.change_circle,
-                          size: AppDimensions.width_25,
-                          color: ColorsManager.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            NoteImagePreview(
+              webImagePath: _webImagePath,
+              pickedImageFile: _pickedImageFile,
+              onDelete: () => setState(() => imageAdded = false),
+              onChange: _showImagePickerBottomSheet,
             ),
 
           verticalSpace(AppDimensions.height_15),
@@ -188,66 +102,52 @@ class _BottomSheetAddNoteState extends State<BottomSheetAddNote> {
     );
   }
 
-  void _imagePicker(BuildContext context) {
-    showModalBottomSheet(
+  Widget _buildTitleField() => TextField(
+    decoration: InputDecoration(
+      hintText: AppStrings.noteTitle,
+      hintStyle: TextStyles.font18GreySemiBold,
+    ),
+    style: TextStyles.font18BlackSemiBold,
+    textAlign: TextAlign.center,
+    controller: noteTitleController,
+    autofocus: true,
+    maxLength: AppConsts.noteTitleMaxLength,
+  );
+  Widget _buildDescriptionField() => SizedBox(
+    height: AppDimensions.height_100,
+    child: TextField(
+      maxLines: null,
+      expands: true,
+      textAlign: TextAlign.start,
+      controller: noteDescriptionController,
+      decoration: InputDecoration(
+        hintText: AppStrings.noteDescription,
+        border: OutlineInputBorder(),
+      ),
+    ),
+  );
+
+  Future<void> _showImagePickerBottomSheet() async {
+    await showModalBottomSheet(
       context: context,
-      builder: (_) {
-        return SafeArea(
-          child: Wrap(
-            children: [
-              _buildListTileImagePicker(
-                Icons.camera_alt,
-                AppStrings.takePhoto,
-                () async => pickedImage(ImageSource.camera),
-              ),
-              _buildListTileImagePicker(
-                Icons.photo_album_outlined,
-                AppStrings.chooseFromGallery,
-                () async => pickedImage(ImageSource.gallery),
-              ),
-            ],
-          ),
-        );
-      },
+      builder: (_) => ImagePickerSheet(onPick: _pickImage),
     );
   }
 
-  Widget _buildListTileImagePicker(
-    IconData iconData,
-    String title,
-    VoidCallback onTap,
-  ) {
-    return ListTile(
-      leading: Icon(iconData),
-      title: Text(title, style: TextStyles.font14DarckBlueMedium),
-      onTap: onTap,
-    );
-  }
+  Future<void> _pickImage(ImageSource source) async {
+    final picked = await ImagePicker().pickImage(source: source);
+    if (picked != null) {
+      if (kIsWeb) {
+        _webImageBytes = await picked.readAsBytes();
 
-  Future pickedImage(ImageSource source) async {
-    try {
-      final picked = await ImagePicker().pickImage(source: source);
-      if (picked != null) {
-        if (kIsWeb) {
-          final bytes = await picked.readAsBytes(); // Await before setState
-          Future.microtask(() {
-            setState(() {
-              _webImageBytes = bytes;
-              _webImagePath = picked.path;
-              imageAdded = true;
-            });
-          });
-        } else {
-          setState(() {
-            _imageFile = File(picked.path);
-            imageAdded = true;
-          });
-        }
+        setState(() {
+          _webImagePath = picked.path;
+        });
+      } else {
+        setState(() => _pickedImageFile = File(picked.path));
       }
-    } catch (e, s) {
-      debugPrint("${AppStrings.cameraError} $e\n$s");
+      imageAdded = true;
     }
-    context.pop();
   }
 
   void _addNote(WidgetRef ref) {
@@ -255,9 +155,9 @@ class _BottomSheetAddNoteState extends State<BottomSheetAddNote> {
       ref
           .watch(addNoteNotifierProvider.notifier)
           .addNote(
-            noteTitle.text,
-            noteDescription.text,
-            _imageFile,
+            noteTitleController.text,
+            noteDescriptionController.text,
+            _pickedImageFile,
             _webImageBytes,
           );
     }
@@ -265,11 +165,12 @@ class _BottomSheetAddNoteState extends State<BottomSheetAddNote> {
 
   bool _checkEntredData() {
     String? message;
-    if (noteTitle.text.isNullOrEmpty() ||
-        noteTitle.text.length < AppConsts.noteTitleMaxLength) {
+    if (noteTitleController.text.isNullOrEmpty() ||
+        noteTitleController.text.length < AppConsts.noteTitleMinLength) {
       message = AppStrings.enterValidNoteTitle;
-    } else if (noteDescription.text.isNullOrEmpty() ||
-        noteDescription.text.length < AppConsts.noteDescriptionMaxLength) {
+    } else if (noteDescriptionController.text.isNullOrEmpty() ||
+        noteDescriptionController.text.length <
+            AppConsts.noteDescriptionMinLength) {
       message = AppStrings.enterValidNoteDescription;
     } else {
       return true;

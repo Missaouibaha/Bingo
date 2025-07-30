@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:bingo_firebase_example/core/services/app_firebase_failure.dart';
+import 'package:bingo_firebase_example/features/home/data/dataSources/models/note_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -89,9 +91,10 @@ class AppFirebaseService {
     Uint8List? webImageBytes,
   ) async {
     try {
+ 
       // config and activate firebase storage before upload images
       final noteImageUrl = await _uploadNoteImage(noteImageFile, webImageBytes);
-     
+
       await _firestore.collection('notes').add({
         'title': noteTitle,
         'description': noteDescription,
@@ -101,12 +104,8 @@ class AppFirebaseService {
       });
 
       return Right(unit);
-    } on FirebaseAuthException catch (exception) {
-      return Left(
-        AppFirebaseFailure.fromCode(exception.code, exception.message),
-      );
     } catch (exception) {
-      return Left(AppFirebaseFailure.unknown(exception.toString()));
+      return Left(AppFirebaseFailure.handle(exception));
     }
   }
 
@@ -128,6 +127,57 @@ class AppFirebaseService {
     } catch (e) {
       debugPrint("⚠️ Image upload failed: ${e.toString()}");
       return null; // Continue  upload note  without image ..
+    }
+  }
+
+  Future<Either<AppFirebaseFailure, List<NoteModel>?>> getNotes() async {
+    final userId = currentUser?.uid;
+    if (userId == null) {
+      return Left(AppFirebaseFailure.permissionDenied());
+    }
+
+    final querySnapchot =
+        await _firestore
+            .collection('notes')
+            .where('user_id', isEqualTo: userId)
+            .orderBy('created_at', descending: true)
+            .get();
+
+    final notes =
+        querySnapchot.docs.map((doc) {
+          return NoteModel.fromMap(doc.data(), doc.id);
+        }).toList();
+
+    return Right(notes);
+  }
+
+  Stream<Either<AppFirebaseFailure, List<NoteModel>>> watchNotes() async* {
+    final userId = currentUser?.uid;
+
+    if (userId == null) {
+      yield Left(AppFirebaseFailure.permissionDenied());
+      return;
+    }
+    try {
+      yield* _firestore
+          .collection('notes')
+          .where('user_id', isEqualTo: userId)
+          .orderBy('created_at', descending: true)
+          .snapshots()
+          .map((querySnapshot) {
+            final notes =
+                querySnapshot.docs.map((doc) {
+                  return NoteModel.fromMap(doc.data(), doc.id);
+                }).toList();
+
+            return Right<AppFirebaseFailure, List<NoteModel>>(notes);
+          })
+          .handleError((error) {
+            return Left(AppFirebaseFailure.unknown(error.toString()));
+          })
+          .distinct();
+    } catch (exception) {
+      yield Left(AppFirebaseFailure.handle(exception));
     }
   }
 }
