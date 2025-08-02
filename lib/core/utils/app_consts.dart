@@ -6,6 +6,6 @@ class AppConsts {
   static const int splashDelay = 1;
   static const int noteTitleMaxLength = 50;
   static const int noteTitleMinLength = 2;
-
   static const int noteDescriptionMinLength = 3;
+  static const int snackBarDealy = 3;
 }

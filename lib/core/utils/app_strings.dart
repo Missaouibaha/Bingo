@@ -53,8 +53,9 @@ class AppStrings {
   static const String deleteAdvertisment =
       "To delete a note, swipe it from right to left. \n "
       "If you want to delete all notes, tap the 'Delete All' button.";
-  static const String deleteAllWarning  =
+  static const String deleteAllWarning =
       'Are you sure you want to delete all notes?';
+  static const String snackBardeleteWarning = "Note will be deleted";
   static const String noNotes = "No notes found";
   static const String enterValidNoteTitle =
       'Please enter a valid title (at least 2 characters).';

@@ -68,4 +68,10 @@ class AppDimensions {
   static double radius_8 = 8.r;
   static double radius_12 = 12.r;
   static double radius_16 = 16.r;
+
+  // Elevation
+  static double elevation_2 = 2.h;
+  static double elevation_3 = 3.h;
+  static double elevation_4 = 4.h;
+  static double elevation_5 = 5.h;
 }

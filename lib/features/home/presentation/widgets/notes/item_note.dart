@@ -2,6 +2,8 @@ import 'package:bingo_firebase_example/core/helper/spacing.dart';
 import 'package:bingo_firebase_example/core/theming/app_dimensions.dart';
 import 'package:bingo_firebase_example/core/theming/colors_manager.dart';
 import 'package:bingo_firebase_example/core/theming/text_styles.dart';
+import 'package:bingo_firebase_example/core/utils/app_consts.dart';
+import 'package:bingo_firebase_example/core/utils/app_strings.dart';
 import 'package:bingo_firebase_example/features/home/domain/entities/note_entity.dart';
 import 'package:bingo_firebase_example/features/home/presentation/providers/delete_note_notifier_provider.dart';
 import 'package:bingo_firebase_example/features/home/presentation/widgets/add/bottom_sheet_add_note.dart';
@@ -11,6 +13,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ItemNote extends StatelessWidget {
   final NoteEntity note;
+
   const ItemNote({super.key, required this.note});
 
   @override
@@ -43,9 +46,22 @@ class ItemNote extends StatelessWidget {
                   size: AppDimensions.width_30,
                 ),
               ),
-              onDismissed: (direction) {
+
+              confirmDismiss: (direction) async {
+                bool cancelDelete = false;
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(_buidlSnackBar(() => cancelDelete = true));
+                await Future.delayed(
+                  const Duration(seconds: AppConsts.snackBarDealy),
+                );
+                if (cancelDelete) {
+                  return false;
+                }
                 deleteNoteById(ref, note.id.toString());
+                return true;
               },
+
               child: Card(
                 elevation: AppDimensions.width_10,
                 child: Row(
@@ -130,6 +146,25 @@ class ItemNote extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  SnackBar _buidlSnackBar(VoidCallback onCancel) {
+    return SnackBar(
+      backgroundColor: ColorsManager.green,
+      elevation: AppDimensions.elevation_5,
+      content: Text(
+        AppStrings.snackBardeleteWarning,
+        style: TextStyles.font15LightWhiteRegular,
+      ),
+
+      duration: Duration(seconds: AppConsts.snackBarDealy),
+      action: SnackBarAction(
+        label: AppStrings.cancel,
+        backgroundColor: ColorsManager.white,
+        onPressed: onCancel,
+      ),
+      behavior: SnackBarBehavior.floating,
     );
   }
 
