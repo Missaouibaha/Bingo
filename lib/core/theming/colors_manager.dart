@@ -7,6 +7,8 @@ class ColorsManager {
   static const Color transparent = Color.fromRGBO(0, 0, 0, 0);
   static const Color blueAccent = Color.fromRGBO(68, 138, 255, 1);
   static const Color grey = Color.fromARGB(255, 158, 158, 158);
+    static const Color green = Color.fromARGB(255, 9, 190, 54);
+
   static const Color darkGrey = Color.fromARGB(127, 14, 50, 51);
   static const Color lightGray = Color.fromARGB(255, 160, 160, 160);
   static const Color lightBlueAccent = Color.fromARGB(255, 240, 255, 255);

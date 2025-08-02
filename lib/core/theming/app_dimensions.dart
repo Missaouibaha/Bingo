@@ -11,6 +11,7 @@ class AppDimensions {
   static double height_20 = 20.h;
   static double height_25 = 25.h;
   static double height_30 = 30.h;
+  static double height_40 = 40.h;
   static double height_50 = 50.h;
   static double height_70 = 70.h;
   static double height_100 = 100.h;
@@ -33,6 +34,7 @@ class AppDimensions {
   static double width_50 = 50.w;
   static double width_70 = 70.w;
   static double width_100 = 100.w;
+  static double width_130 = 130.w;
   static double width_150 = 150.w;
   static double width_170 = 170.w;
   static double width_250 = 250.w;
@@ -66,4 +68,10 @@ class AppDimensions {
   static double radius_8 = 8.r;
   static double radius_12 = 12.r;
   static double radius_16 = 16.r;
+
+  // Elevation
+  static double elevation_2 = 2.h;
+  static double elevation_3 = 3.h;
+  static double elevation_4 = 4.h;
+  static double elevation_5 = 5.h;
 }

@@ -1,17 +1,23 @@
+import 'dart:io';
+
+import 'package:firebase_auth/firebase_auth.dart';
+
 class AppFirebaseFailure {
   final String message;
 
   AppFirebaseFailure._(this.message);
 
   // --- Auth-specific failures ---
-  factory AppFirebaseFailure.invalidEmail() => AppFirebaseFailure._("Invalid email address.");
+  factory AppFirebaseFailure.invalidEmail() =>
+      AppFirebaseFailure._("Invalid email address.");
   factory AppFirebaseFailure.emailAlreadyInUse() =>
       AppFirebaseFailure._("This email is already in use.");
   factory AppFirebaseFailure.userDisabled() =>
       AppFirebaseFailure._("User account is disabled.");
   factory AppFirebaseFailure.userNotFound() =>
       AppFirebaseFailure._("No user found with this email.");
-  factory AppFirebaseFailure.wrongPassword() => AppFirebaseFailure._("Wrong password.");
+  factory AppFirebaseFailure.wrongPassword() =>
+      AppFirebaseFailure._("Wrong password.");
   factory AppFirebaseFailure.invalidCredential() =>
       AppFirebaseFailure._("Invalid or expired credentials.");
   factory AppFirebaseFailure.weakPassword() =>
@@ -20,11 +26,13 @@ class AppFirebaseFailure {
       AppFirebaseFailure._("This operation is not allowed.");
 
   // --- Firestore/general failures ---
-  factory AppFirebaseFailure.permissionDenied() =>
-      AppFirebaseFailure._("You don't have permission to perform this operation.");
+  factory AppFirebaseFailure.permissionDenied() => AppFirebaseFailure._(
+    "You don't have permission to perform this operation.",
+  );
   factory AppFirebaseFailure.serverUnavailable() =>
       AppFirebaseFailure._("Server is unavailable. Please try again later.");
-  factory AppFirebaseFailure.networkError() => AppFirebaseFailure._("No internet connection.");
+  factory AppFirebaseFailure.networkError() =>
+      AppFirebaseFailure._("No internet connection.");
   factory AppFirebaseFailure.notFound() =>
       AppFirebaseFailure._("Requested resource was not found.");
   factory AppFirebaseFailure.aborted() =>
@@ -75,6 +83,18 @@ class AppFirebaseFailure {
 
       default:
         return AppFirebaseFailure.unknown(message ?? 'Unknown error');
+    }
+  }
+
+  static AppFirebaseFailure handle(dynamic exception) {
+    if (exception is FirebaseAuthException) {
+      return AppFirebaseFailure.fromCode(exception.code, exception.message);
+    } else if (exception is FirebaseException) {
+      return AppFirebaseFailure.fromCode(exception.code, exception.message);
+    } else if (exception is SocketException) {
+      return AppFirebaseFailure.networkError();
+    } else {
+      return AppFirebaseFailure.unknown(exception.toString());
     }
   }
 }

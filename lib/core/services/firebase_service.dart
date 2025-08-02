@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:bingo_firebase_example/core/services/app_firebase_failure.dart';
+import 'package:bingo_firebase_example/features/home/data/dataSources/models/note_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -91,7 +92,7 @@ class AppFirebaseService {
     try {
       // config and activate firebase storage before upload images
       final noteImageUrl = await _uploadNoteImage(noteImageFile, webImageBytes);
-     
+
       await _firestore.collection('notes').add({
         'title': noteTitle,
         'description': noteDescription,
@@ -101,12 +102,8 @@ class AppFirebaseService {
       });
 
       return Right(unit);
-    } on FirebaseAuthException catch (exception) {
-      return Left(
-        AppFirebaseFailure.fromCode(exception.code, exception.message),
-      );
     } catch (exception) {
-      return Left(AppFirebaseFailure.unknown(exception.toString()));
+      return Left(AppFirebaseFailure.handle(exception));
     }
   }
 
@@ -128,6 +125,111 @@ class AppFirebaseService {
     } catch (e) {
       debugPrint("⚠️ Image upload failed: ${e.toString()}");
       return null; // Continue  upload note  without image ..
+    }
+  }
+
+  Future<Either<AppFirebaseFailure, List<NoteModel>?>> getNotes() async {
+    final userId = currentUser?.uid;
+    if (userId == null) {
+      return Left(AppFirebaseFailure.permissionDenied());
+    }
+
+    final querySnapchot =
+        await _firestore
+            .collection('notes')
+            .where('user_id', isEqualTo: userId)
+            .orderBy('created_at', descending: true)
+            .get();
+
+    final notes =
+        querySnapchot.docs.map((doc) {
+          return NoteModel.fromMap(doc.data(), doc.id);
+        }).toList();
+
+    return Right(notes);
+  }
+
+  Stream<Either<AppFirebaseFailure, List<NoteModel>>> watchNotes() async* {
+    final userId = currentUser?.uid;
+
+    if (userId == null) {
+      yield Left(AppFirebaseFailure.permissionDenied());
+      return;
+    }
+    try {
+      yield* _firestore
+          .collection('notes')
+          .where('user_id', isEqualTo: userId)
+          .orderBy('created_at', descending: true)
+          .snapshots()
+          .map((querySnapshot) {
+            final notes =
+                querySnapshot.docs.map((doc) {
+                  return NoteModel.fromMap(doc.data(), doc.id);
+                }).toList();
+
+            return Right<AppFirebaseFailure, List<NoteModel>>(notes);
+          })
+          .handleError((error) {
+            return Left(AppFirebaseFailure.unknown(error.toString()));
+          })
+          .distinct();
+    } catch (exception) {
+      yield Left(AppFirebaseFailure.handle(exception));
+    }
+  }
+
+  Future<Either<AppFirebaseFailure, Unit>> updateNote({
+    required String noteId,
+    required String title,
+    required String description,
+  }) async {
+    try {
+      await _firestore.collection('notes').doc(noteId).update({
+        'title': title,
+        'description': description,
+        'created_at': FieldValue.serverTimestamp(),
+      });
+
+      return Right(unit);
+    } catch (exception) {
+      return Left(AppFirebaseFailure.handle(exception));
+    }
+  }
+
+  Future<Either<AppFirebaseFailure, Unit>> deleteNoteById(String noteId) async {
+    try {
+      await _firestore.collection('notes').doc(noteId).delete();
+      return Right(unit);
+    } catch (exception) {
+      return Left(AppFirebaseFailure.handle(exception));
+    }
+  }
+
+  Future<Either<AppFirebaseFailure, Unit>> deleteAllNotes() async {
+    final userId = currentUser?.uid;
+    if (userId == null) {
+      return Left(AppFirebaseFailure.permissionDenied());
+    }
+
+    try {
+      final querySnapshot =
+          await _firestore
+              .collection('notes')
+              .where('user_id', isEqualTo: userId)
+              .get();
+
+      final batch = _firestore.batch();
+
+      for (final doc in querySnapshot.docs) {
+        batch.delete(doc.reference);
+      }
+
+      await batch.commit();
+
+      return Right(unit);
+    } catch (exception) {
+      return Left(AppFirebaseFailure.handle(exception));
     }
   }
 }
