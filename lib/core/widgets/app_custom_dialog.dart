@@ -118,8 +118,9 @@ class _AppCustomDialogState extends State<AppCustomDialog> {
           ),
         ElevatedButton(
           onPressed: () {
+            if (mounted) context.pop();
+
             widget.okAction();
-            context.pop();
           },
           child: Text(
             widget.okTextButton ?? AppStrings.ok,

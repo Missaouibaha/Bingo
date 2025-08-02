@@ -1,6 +1,6 @@
 import 'package:bingo_firebase_example/core/theming/app_dimensions.dart';
 import 'package:bingo_firebase_example/core/theming/colors_manager.dart';
-import 'package:bingo_firebase_example/features/home/presentation/widgets/bottom_sheet_add_note.dart';
+import 'package:bingo_firebase_example/features/home/presentation/widgets/add/bottom_sheet_add_note.dart';
 import 'package:flutter/material.dart';
 
 class FloatBtnAddNote extends StatelessWidget {
@@ -40,6 +40,7 @@ class FloatBtnAddNote extends StatelessWidget {
   void showBottomSheetAddNote(BuildContext context) {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(AppDimensions.radius_16),
@@ -47,7 +48,17 @@ class FloatBtnAddNote extends StatelessWidget {
         ),
       ),
       builder: (context) {
-        return BottomSheetAddNote();
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.9,
+            ),
+            child: SingleChildScrollView(child: BottomSheetAddNote()),
+          ),
+        );
       },
     );
   }

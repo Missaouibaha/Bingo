@@ -17,3 +17,15 @@ extension NoteMapper on NoteModel {
     );
   }
 }
+
+extension NoteDomain on NoteEntity {
+  NoteModel toNoteModel() {
+    return NoteModel(
+      id: id ?? '',
+      title: title,
+      desciprion: description,
+      userId: userId ?? '',
+      createdAt: createdAt ?? '',
+    );
+  }
+}

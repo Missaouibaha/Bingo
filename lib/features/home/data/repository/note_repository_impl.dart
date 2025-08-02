@@ -60,4 +60,14 @@ class NoteRepositoryImpl implements NoteRepository {
       );
     });
   }
+
+  @override
+  Future<Either<AppFirebaseFailure, Unit>> update(NoteEntity note) {
+    return _remote.updateNote(note.toNoteModel());
+  }
+
+  @override
+  Future<Either<AppFirebaseFailure, Unit>> delete(String noteId,bool deleteAll) {
+    return _remote.deleteNote(noteId, deleteAll);
+  }
 }

@@ -35,4 +35,23 @@ class NoteRemoteDataSourcesImpl implements NoteRemoteDataSources {
   Stream<Either<AppFirebaseFailure, List<NoteModel>>> watchNotes() {
     return _appFirebaseService.watchNotes();
   }
+
+  @override
+  Future<Either<AppFirebaseFailure, Unit>> updateNote(NoteModel note) {
+    return _appFirebaseService.updateNote(
+      noteId: note.id,
+      title: note.title,
+      description: note.desciprion,
+    );
+  }
+
+  @override
+  Future<Either<AppFirebaseFailure, Unit>> deleteNote(
+    String noteId,
+    bool deleteAll,
+  ) {
+    return deleteAll
+        ? _appFirebaseService.deleteAllNotes()
+        : _appFirebaseService.deleteNoteById(noteId);
+  }
 }

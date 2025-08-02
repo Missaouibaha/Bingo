@@ -16,7 +16,6 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Container(
         width: AppDimensions.width_100,
         alignment: Alignment.centerLeft,
-
         child: Image.asset(
           AppAssets.bingoTitle,
           color: ColorsManager.darckBlue,

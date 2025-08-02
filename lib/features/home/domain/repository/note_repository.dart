@@ -14,6 +14,7 @@ abstract class NoteRepository {
   );
 
   Future<Either<AppFirebaseFailure, List<NoteEntity>?>> getNotes();
-
   Stream<Either<AppFirebaseFailure, List<NoteEntity>>> watchNotes();
+  Future<Either<AppFirebaseFailure, Unit>> update(NoteEntity note);
+  Future<Either<AppFirebaseFailure,Unit>>delete(String noteId, bool deleteAll ) ;
 }

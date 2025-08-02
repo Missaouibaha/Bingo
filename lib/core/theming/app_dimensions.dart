@@ -11,6 +11,7 @@ class AppDimensions {
   static double height_20 = 20.h;
   static double height_25 = 25.h;
   static double height_30 = 30.h;
+  static double height_40 = 40.h;
   static double height_50 = 50.h;
   static double height_70 = 70.h;
   static double height_100 = 100.h;

@@ -7,6 +7,9 @@ class AppStrings {
   static const String cancel = "Cancel";
   static const String ok = "OK";
   static const String confirm = "Confirm";
+  static const String error = "Error";
+  static const String yes = "Yes";
+  static const String no = "No";
 
   //Auth
   static const String signin = "SignIn";
@@ -36,15 +39,30 @@ class AppStrings {
   //home
   static const String takePhoto = "Take photo";
   static const String chooseFromGallery = "Choose From Gallery";
-  static const String noteAdded = "Note was added successfully.";
+  static const String noteAdded = "Note added successfully.";
+  static const String noteUpdated = "Note updated successfully.";
+  static const String noteDeleted = "Note deleted successfully.";
   static const String noteTitle = "Note Title";
   static const String noteDescription = "Add description";
   static const String notePhotos = "Photos";
   static const String add = "Add";
+  static const String save = "Save";
+  static const String note = "Note";
+  static const String deleteNote = "Delete Notes";
+  static const String deleteAll = "Delete All";
+  static const String deleteAdvertisment =
+      "To delete a note, swipe it from right to left. \n "
+      "If you want to delete all notes, tap the 'Delete All' button.";
+  static const String deleteAllWarning  =
+      'Are you sure you want to delete all notes?';
+  static const String noNotes = "No notes found";
   static const String enterValidNoteTitle =
       'Please enter a valid title (at least 2 characters).';
   static const String enterValidNoteDescription =
       'Please enter a valid description (at least 3 characters).';
+
+  static const String update = "Update";
+
   //errors
   static const String cameraError = "Camera Error";
 }

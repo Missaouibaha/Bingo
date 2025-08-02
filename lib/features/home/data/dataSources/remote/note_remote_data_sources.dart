@@ -15,4 +15,7 @@ abstract class NoteRemoteDataSources {
 
   Future<Either<AppFirebaseFailure, List<NoteModel>?>> getNotes();
   Stream<Either<AppFirebaseFailure, List<NoteModel>>> watchNotes();
+  Future<Either<AppFirebaseFailure,Unit>> updateNote(NoteModel note);
+    Future<Either<AppFirebaseFailure, Unit>> deleteNote(String noteId, bool deleteAll);
+
 }

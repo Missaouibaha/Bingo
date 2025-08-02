@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:bingo_firebase_example/core/helper/exteensions.dart';
 import 'package:bingo_firebase_example/core/helper/spacing.dart';
-import 'package:bingo_firebase_example/core/theming/app_assets.dart';
 import 'package:bingo_firebase_example/core/theming/app_dimensions.dart';
 import 'package:bingo_firebase_example/core/theming/colors_manager.dart';
 import 'package:bingo_firebase_example/core/theming/text_styles.dart';
@@ -10,17 +9,21 @@ import 'package:bingo_firebase_example/core/utils/app_consts.dart';
 import 'package:bingo_firebase_example/core/utils/app_strings.dart';
 import 'package:bingo_firebase_example/core/widgets/app_custom_dialog.dart';
 import 'package:bingo_firebase_example/core/widgets/app_rounded_button.dart';
+import 'package:bingo_firebase_example/features/home/domain/entities/note_entity.dart';
 import 'package:bingo_firebase_example/features/home/presentation/providers/add_note_notifier_provider.dart';
-import 'package:bingo_firebase_example/features/home/presentation/widgets/add_note_listener.dart';
+import 'package:bingo_firebase_example/features/home/presentation/providers/update_note_notifier_provider.dart';
+import 'package:bingo_firebase_example/features/home/presentation/widgets/add/add_note_listener.dart';
 import 'package:bingo_firebase_example/features/home/presentation/widgets/imagepicker/image_picker_sheet.dart';
 import 'package:bingo_firebase_example/features/home/presentation/widgets/imagepicker/image_preview.dart';
+import 'package:bingo_firebase_example/features/home/presentation/widgets/update/update_note_listener.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
 class BottomSheetAddNote extends StatefulWidget {
-  const BottomSheetAddNote({super.key});
+  final NoteEntity? note;
+  const BottomSheetAddNote({super.key, this.note});
 
   @override
   State<BottomSheetAddNote> createState() => _BottomSheetAddNoteState();
@@ -28,13 +31,27 @@ class BottomSheetAddNote extends StatefulWidget {
 
 class _BottomSheetAddNoteState extends State<BottomSheetAddNote> {
   String? _webImagePath;
+  bool update = false;
   bool imageAdded = false;
   Uint8List? _webImageBytes;
   File? _pickedImageFile;
 
-  final TextEditingController noteTitleController = TextEditingController();
-  final TextEditingController noteDescriptionController =
-      TextEditingController();
+  late TextEditingController noteTitleController;
+  late TextEditingController noteDescriptionController;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.note != null) {
+      update = true;
+      imageAdded = true;
+    }
+    noteTitleController = TextEditingController(text: widget.note?.title ?? '');
+    noteDescriptionController = TextEditingController(
+      text: widget.note?.description ?? '',
+    );
+  }
+
   @override
   void dispose() {
     noteTitleController.dispose();
@@ -56,7 +73,7 @@ class _BottomSheetAddNoteState extends State<BottomSheetAddNote> {
           _buildTitleField(),
           _buildDescriptionField(),
           verticalSpace(AppDimensions.height_15),
-           if (!imageAdded)
+          if (!imageAdded)
             GestureDetector(
               onTap: _showImagePickerBottomSheet,
               child: Row(
@@ -74,9 +91,9 @@ class _BottomSheetAddNoteState extends State<BottomSheetAddNote> {
                 ],
               ),
             ),
-          if (imageAdded)
+          if (imageAdded || update)
             NoteImagePreview(
-              webImagePath: _webImagePath,
+              webImagePath: _webImagePath ?? widget.note?.imagePath,
               pickedImageFile: _pickedImageFile,
               onDelete: () => setState(() => imageAdded = false),
               onChange: _showImagePickerBottomSheet,
@@ -87,7 +104,7 @@ class _BottomSheetAddNoteState extends State<BottomSheetAddNote> {
           Consumer(
             builder: (context, ref, child) {
               return AppRoundedButton(
-                textButton: AppStrings.add,
+                textButton: AppStrings.save,
                 textStyle: TextStyles.font24WhiteMedium,
                 onPressed: () {
                   _addNote(ref);
@@ -96,7 +113,7 @@ class _BottomSheetAddNoteState extends State<BottomSheetAddNote> {
             },
           ),
           verticalSpace(AppDimensions.height_15),
-          AddNoteListener(),
+          update ? UpdateNoteListener() : AddNoteListener(),
         ],
       ),
     );
@@ -113,17 +130,14 @@ class _BottomSheetAddNoteState extends State<BottomSheetAddNote> {
     autofocus: true,
     maxLength: AppConsts.noteTitleMaxLength,
   );
-  Widget _buildDescriptionField() => SizedBox(
-    height: AppDimensions.height_100,
-    child: TextField(
-      maxLines: null,
-      expands: true,
-      textAlign: TextAlign.start,
-      controller: noteDescriptionController,
-      decoration: InputDecoration(
-        hintText: AppStrings.noteDescription,
-        border: OutlineInputBorder(),
-      ),
+  Widget _buildDescriptionField() => TextField(
+    maxLines: null,
+    minLines: 3,
+    textAlign: TextAlign.start,
+    controller: noteDescriptionController,
+    decoration: InputDecoration(
+      hintText: AppStrings.noteDescription,
+      border: OutlineInputBorder(),
     ),
   );
 
@@ -152,14 +166,25 @@ class _BottomSheetAddNoteState extends State<BottomSheetAddNote> {
 
   void _addNote(WidgetRef ref) {
     if (_checkEntredData()) {
-      ref
-          .watch(addNoteNotifierProvider.notifier)
-          .addNote(
-            noteTitleController.text,
-            noteDescriptionController.text,
-            _pickedImageFile,
-            _webImageBytes,
-          );
+      update
+          ? ref
+              .watch(updateNoteNotifierProvider.notifier)
+              .updateNote(
+                NoteEntity(
+                  id: widget.note?.id,
+                  title: noteTitleController.text,
+                  description: noteDescriptionController.text,
+                  imagePath: "",
+                ),
+              )
+          : ref
+              .watch(addNoteNotifierProvider.notifier)
+              .addNote(
+                noteTitleController.text,
+                noteDescriptionController.text,
+                _pickedImageFile,
+                _webImageBytes,
+              );
     }
   }
 
