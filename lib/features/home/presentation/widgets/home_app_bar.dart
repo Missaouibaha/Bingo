@@ -1,8 +1,11 @@
+import 'package:bingo_firebase_example/core/helper/routing/routes.dart';
 import 'package:bingo_firebase_example/core/helper/spacing.dart';
 import 'package:bingo_firebase_example/core/theming/app_assets.dart';
 import 'package:bingo_firebase_example/core/theming/app_dimensions.dart';
 import 'package:bingo_firebase_example/core/theming/colors_manager.dart';
+import 'package:bingo_firebase_example/core/utils/app_consts.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppBar({super.key});
@@ -23,19 +26,33 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       centerTitle: true,
-      actionsPadding: EdgeInsets.all(AppDimensions.padding_10),
+      actionsPadding: EdgeInsets.symmetric(
+        vertical: AppDimensions.verticalPadding_5,
+      ),
       automaticallyImplyLeading: false,
       actions: [
         horizontalSpace(AppDimensions.width_10),
-        Icon(
-          Icons.person_4_outlined,
-          color: ColorsManager.darckBlue,
-          size: AppDimensions.width_35,
+        GestureDetector(
+          onTap: () {
+            context.pushNamed(Routes.profileRoute);
+          },
+          child: Container(
+            padding: EdgeInsets.all(3),
+
+            decoration: BoxDecoration(
+              color: Colors.blue,
+              shape: BoxShape.circle,
+            ),
+            child: CircleAvatar(
+              radius: AppDimensions.radius_35,
+              backgroundImage: NetworkImage(AppConsts.fakePhotoProfile),
+            ),
+          ),
         ),
       ],
     );
   }
-  
+
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

@@ -2,6 +2,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AppDimensions {
   // Height
+  static double height_2 = 2.h;
   static double height_5 = 5.h;
   static double height_8 = 8.h;
   static double height_10 = 10.h;
@@ -68,6 +69,9 @@ class AppDimensions {
   static double radius_8 = 8.r;
   static double radius_12 = 12.r;
   static double radius_16 = 16.r;
+  static double radius_30 = 30.r;
+  static double radius_35 = 35.r;
+  static double radius_100 = 100.r;
 
   // Elevation
   static double elevation_2 = 2.h;

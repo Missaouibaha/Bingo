@@ -1,6 +1,7 @@
 import 'package:bingo_firebase_example/core/helper/routing/routes.dart';
 import 'package:bingo_firebase_example/features/auth/presentation/login/login_screen.dart';
 import 'package:bingo_firebase_example/features/auth/presentation/register/register_screen.dart';
+import 'package:bingo_firebase_example/features/auth/presentation/update/profile_screen.dart';
 import 'package:bingo_firebase_example/features/home/presentation/home_screen.dart';
 import 'package:bingo_firebase_example/features/splash/presentation/splash_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -29,6 +30,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: Routes.homeRoute,
         name: Routes.homeRoute,
         builder: (context, state) => HomeScreen(),
+      ),
+      GoRoute(
+        path: Routes.profileRoute,
+        name: Routes.profileRoute,
+        builder: (context, state) => ProfileScreen(),
       ),
     ],
   );

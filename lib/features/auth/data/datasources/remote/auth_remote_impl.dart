@@ -25,4 +25,27 @@ class AuthRemoteImpl implements AuthRemote {
   ) async {
     return await _authService.register(email, password, name);
   }
+
+  @override
+  Future<Either<AppFirebaseFailure, User?>> getUser() async {
+    return await _authService.getUser();
+  }
+
+  @override
+  Future<Either<AppFirebaseFailure, User?>> updateName(String name) {
+    return _authService.updateName(name);
+  }
+
+  @override
+  Future<Either<AppFirebaseFailure, Unit>> changePassword(
+    String oldPassword,
+    String newPassword,
+  ) {
+    return _authService.updatePassword(oldPassword, newPassword);
+  }
+
+  @override
+  Future<Either<AppFirebaseFailure, Unit>> logout() {
+    return _authService.signOut();
+  }
 }
