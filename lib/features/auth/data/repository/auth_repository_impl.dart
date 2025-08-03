@@ -8,7 +8,10 @@ class AuthRepositoryImpl implements AuthRepository {
   final AuthRemote _authRemote;
   AuthRepositoryImpl(this._authRemote);
   @override
-  Future<Either<AppFirebaseFailure, User?>> signIn(String email, String password) {
+  Future<Either<AppFirebaseFailure, User?>> signIn(
+    String email,
+    String password,
+  ) {
     return _authRemote.signIn(email, password);
   }
 
@@ -19,5 +22,26 @@ class AuthRepositoryImpl implements AuthRepository {
     String name,
   ) {
     return _authRemote.register(email, password, name);
+  }
+
+  @override
+  Future<Either<AppFirebaseFailure, User?>> getUser() {
+    return _authRemote.getUser();
+  }
+
+  @override
+  Future<Either<AppFirebaseFailure, User?>> updateName(String name) {
+    return _authRemote.updateName(name);
+  }
+  
+  @override
+  Future<Either<AppFirebaseFailure, Unit>> changePassword(String oldPassword, String newPassword) {
+  return _authRemote.changePassword(oldPassword, newPassword);
+  }
+  
+  @override
+  Future<Either<AppFirebaseFailure, Unit>> logOut() {
+    return _authRemote.logout() ;
+    
   }
 }

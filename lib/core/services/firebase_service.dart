@@ -32,12 +32,8 @@ class AppFirebaseService {
       );
 
       return Right(result.user);
-    } on FirebaseAuthException catch (e) {
-      debugPrint('🔥 FirebaseAuthException.code = ${e.code}');
-      debugPrint('🔥 FirebaseAuthException.message = ${e.message}');
-      return Left(AppFirebaseFailure.fromCode(e.code, e.message));
     } catch (e) {
-      return Left(AppFirebaseFailure.unknown(e.toString()));
+      return Left(AppFirebaseFailure.handle(e));
     }
   }
 
@@ -68,17 +64,73 @@ class AppFirebaseService {
       await result.user?.reload();
       final updatedUser = _auth.currentUser;
       return Right(updatedUser);
-    } on FirebaseAuthException catch (exception) {
-      return Left(
-        AppFirebaseFailure.fromCode(exception.code, exception.message),
-      );
+    } catch (exception) {
+      return Left(AppFirebaseFailure.handle(exception));
+    }
+  }
+
+  Future<Either<AppFirebaseFailure, User?>> getUser() async {
+    try {
+      await _auth.currentUser?.reload();
+      return Right(instance.currentUser);
     } catch (exception) {
       return Left(AppFirebaseFailure.unknown(exception.toString()));
     }
   }
 
-  Future<void> signOut() async {
-    await _auth.signOut();
+  Future<Either<AppFirebaseFailure, User?>> updateName(String newName) async {
+    try {
+      final user = _auth.currentUser;
+      if (user == null) {
+        return Left(
+          AppFirebaseFailure.unknown("No user is currently signed in."),
+        );
+      }
+      await user.updateDisplayName(newName);
+
+      await _firestore.collection('users').doc(user.uid).update({
+        'fullName': newName,
+      });
+      await user.reload();
+      return Right(_auth.currentUser);
+    } catch (e) {
+      return Left(AppFirebaseFailure.handle(e));
+    }
+  }
+
+  Future<Either<AppFirebaseFailure, Unit>> updatePassword(
+    String oldPassword,
+    String newPassword,
+  ) async {
+    try {
+      final user = _auth.currentUser;
+      if (user == null) {
+        return Left(
+          AppFirebaseFailure.unknown("No user is currently signed in."),
+        );
+      }
+
+      // Re-authenticate first with old password
+      final credential = EmailAuthProvider.credential(
+        email: user.email!,
+        password: oldPassword,
+      );
+      await user.reauthenticateWithCredential(credential);
+
+      await user.updatePassword(newPassword);
+      return const Right(unit);
+    } catch (exception) {
+      return Left(AppFirebaseFailure.handle(exception));
+    }
+  }
+
+  Future<Either<AppFirebaseFailure, Unit>> signOut() async {
+    try {
+      await _auth.signOut();
+      return const Right(unit);
+    } catch (exception) {
+      return Left(AppFirebaseFailure.handle(exception));
+    }
   }
 
   //---------------------NOTES ---------------

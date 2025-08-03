@@ -78,6 +78,18 @@ class ItemNote extends StatelessWidget {
                           height: AppDimensions.height_150,
                           width: AppDimensions.width_130,
                           fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              height: AppDimensions.height_150,
+                              width: AppDimensions.width_130,
+                              color: Colors.grey.shade200,
+                              child: Icon(
+                                Icons.broken_image,
+                                size: AppDimensions.width_40,
+                                color: Colors.grey,
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ),

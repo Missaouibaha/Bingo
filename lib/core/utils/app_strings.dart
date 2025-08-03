@@ -13,8 +13,8 @@ class AppStrings {
 
   //Auth
   static const String signin = "SignIn";
-
   static const String email = "Email";
+  static const String name = "Name";
   static const String password = "Password";
   static const String enterPassword = 'Please enter your password';
   static const String passwordConstrainsLength =
@@ -35,6 +35,17 @@ class AppStrings {
   static const String confirmPassLengthRestriction =
       " password and confirm password are not identical";
   static const String hvAccnt = "Already Have an account ?";
+  static const String changeName = "Change Name";
+  static const String changePassword = "Change Password";
+  static const String oldPassword = " Old Password";
+  static const String newPassword = " New Password";
+  static const String confirmNewPassword = "Confirm New Password";
+  static const String confirmNewPassRestriction =
+      "new password and confirm new password are not identical";
+  static const String logOut = "Logout";
+  static const String logOutWarning = "Are you sure you want to logout?";
+  static const String nameChanged = " Name updated successfully";
+  static const String passwordChanged = " Password updated successfully";
 
   //home
   static const String takePhoto = "Take photo";

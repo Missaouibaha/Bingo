@@ -10,7 +10,7 @@ final remoteAuthProvider = FutureProvider<AuthRemote>((ref) async {
   return AuthRemoteImpl(authService);
 });
 
-final repositoryProvider = FutureProvider<AuthRepository>((ref) async {
+final authRepositoryProvider = FutureProvider<AuthRepository>((ref) async {
   final remote = await ref.read(remoteAuthProvider.future);
   return AuthRepositoryImpl(remote);
 });
